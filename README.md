@@ -18,4 +18,26 @@ A project management system following the **Kanban/Scrum** model. Users can:
 -   **Containerization**: Docker + Docker Compose
 -   **Auth**: JWT Authentication
 
+## 🚀 How to start project
+
+### Create your `.env` file
+
+```bash
+cp .env.example .env
+```
+
+Open the `.env` file and **add your own values** (database, secrets, etc.).
+
+### Run docker
+
+```bash
+docker compose up -d
+```
+
+### API Documentation
+
+📖 You can explore and test the API with Postman:
+
+[👉 Postman API Guide](https://documenter.getpostman.com/view/25520088/2sB3BLjTTi)
+
 ---
