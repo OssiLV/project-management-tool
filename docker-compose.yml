@@ -51,7 +51,7 @@ services:
         image: nginx:latest
         restart: always
         ports:
-            - "8080:80" # Expose port 8080 to host (user access via localhost:8080)
+            - "${API_GATEWAY_PORT}:80" # Expose port 8080 to host (user access via localhost:8080)
         volumes:
             - ./nginx.conf:/etc/nginx/nginx.conf:ro # Mount file config NGINX
         depends_on:
