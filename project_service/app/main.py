@@ -5,7 +5,14 @@ from .schemas import ProjectCreate, ProjectResponse, ProjectMemberCreate, Projec
 from .crud import create_project, get_project, add_member, get_members, get_member_role
 from .auth import get_current_user
 
-app = FastAPI()
+app = FastAPI(
+    root_path="/project_service",
+    title="Project Service API",
+    version="1.0.0",
+    openapi_url="/openapi.json",
+    docs_url="/docs",
+    redoc_url="/edoc",
+)
 
 @app.post("/projects", response_model=ProjectResponse)
 def create_new_project(project: ProjectCreate, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):

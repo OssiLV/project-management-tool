@@ -7,7 +7,14 @@ from .schemas import UserCreate, UserResponse, Token, RoleCreate, RoleResponse
 from .crud import create_user, get_user_by_email, create_role, get_roles, get_user_by_id
 from .auth import create_access_token, get_current_user
 
-app = FastAPI()
+app = FastAPI(
+    root_path="/auth_service",
+    title="Auth Service API",
+    version="1.0.0",
+    openapi_url="/openapi.json",
+    docs_url="/docs",
+    redoc_url="/edoc",
+)
 
 @app.post("/register", response_model=UserResponse)
 def register(user: UserCreate, db: Session = Depends(get_db)):
