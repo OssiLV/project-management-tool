@@ -20,6 +20,8 @@ services:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: auth_db
             JWT_SECRET: ${JWT_SECRET}
+        volumes:
+            - ./auth_service/migrations:/app/migrations
 
     project_service:
         build: ./project_service
@@ -33,6 +35,8 @@ services:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: project_db
             JWT_SECRET: ${JWT_SECRET}
+        volumes:
+            - ./project_service/migrations:/app/migrations
 
     # board_service:
     #   build: ./board_service
