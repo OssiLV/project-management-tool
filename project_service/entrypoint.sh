@@ -1,34 +1,28 @@
 #!/bin/bash
 
-# Chờ DB ready
-python - <<END
-import time, os, pymysql
+# Wait for MariaDB using wait-for-it.sh
+echo "[DOING] - Waiting for MariaDB..."
+/app/wait-for-it.sh "${MYSQL_HOST:-db}:${MYSQL_PORT:-3306}" --timeout=30 -- echo "[DONE] - MariaDB is ready!"
 
-DB_HOST = os.getenv("MYSQL_HOST", "db")
-DB_PORT = int(os.getenv("MYSQL_PORT", 3306))
-DB_USER = os.getenv("MYSQL_USER", "root")
-DB_PASSWORD = os.getenv("MYSQL_ROOT_PASSWORD", "")
+# Ensure migrations/versions directory exists
+if [ ! -d "migrations/versions" ]; then
+    echo "[DOING] - Creating migrations/versions folder..."
+    mkdir -p /app/migrations/versions
+    echo "[DONE] - Create migrations/versions folder"
+fi
 
-while True:
-    try:
-        conn = pymysql.connect(host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASSWORD)
-        conn.close()
-        print("✅ MariaDB is ready!")
-        break
-    except Exception:
-        print("Waiting for MariaDB...")
-        time.sleep(2)
-END
-
-# Check nếu migrations chưa init (folder versions rỗng hoặc không tồn tại)
-if [ ! -d "migrations/versions" ] || [ -z "$(ls -A migrations/versions)" ]; then
-    echo "Generating initial migration..."
+# Check if versions folder is empty
+if [ -z "$(ls -A migrations/versions)" ]; then
+    echo "[DOING] - Generating initial migration..."
     alembic revision --autogenerate -m "Initial project schema"
+    echo "[DONE] - Generate initial migration"
 fi
 
 # Apply migrations
-echo "Applying migrations..."
-alembic upgrade head
+echo "[DOING] - Applying migrations..."
+alembic upgrade head || { echo "Migration failed"; exit 1; }
+echo "[DONE] - Apply migrations"
 
-# Start app
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+# Start application
+echo "[DOING] - Starting application..."
+exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
