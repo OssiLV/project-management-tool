@@ -1,8 +1,31 @@
-.idea
+# Git
+.git
+.gitignore
 
-# python
-__pycache__
-.venv
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.egg-info/
+.eggs/
+.venv/
+venv/
 
-# env files
+# Env & secrets
 .env
+*.env
+*.secret
+*.key
+*.pem
+
+# Logs & tmp
+*.log
+*.tmp
+*.swp
+
+# IDE/editor
+.vscode/
+.idea/
+*.iml
