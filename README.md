@@ -15,8 +15,14 @@ A project management system following the **Kanban/Scrum** model. Users can:
 
 -   **Backend**: Python (FastAPI)
 -   **Database**: MariaDB (one schema per service)
+-   **ORM**: SQLAlchemy
+-   **Migration**: Alembic
 -   **Containerization**: Docker + Docker Compose
--   **Auth**: JWT Authentication
+-   **Auth**: JWT (JSON Web Token) – stateless authentication between microservices.
+-   **Load Balancing / Reverse Proxy**: Nginx
+-   **Testing**: coming soon...
+-   **CI/CD**: coming soon...
+-   **Monitoring/Logging**: coming soon...
 
 ## 🚀 How to start project
 
