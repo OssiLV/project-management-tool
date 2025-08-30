@@ -10,6 +10,7 @@ class User(Base):
     password_hash = Column(String(255), nullable=False)
     role = Column(String(50), nullable=False)  # e.g., 'admin', 'project_manager', 'member', 'guest'
     created_at = Column(DateTime, default=datetime.utcnow)
+    is_active = Column(Integer, default=1)  # 1 = active, 0 = soft deleted
 
 class Role(Base):
     __tablename__ = "roles"

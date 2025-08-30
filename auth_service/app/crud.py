@@ -27,4 +27,46 @@ def create_role(db: Session, role: RoleCreate):
 def get_roles(db: Session):
     return db.query(Role).all()
 
-# TODO Add other functions: update user, delete, v.v.
+# Flexible update user fields
+def update_user(db: Session, user_id: int, update_data: dict):
+    user = db.query(User).filter(User.id == user_id, User.is_active == 1).first()
+    if not user:
+        return None
+    for key, value in update_data.items():
+        if key == "password":
+            import bcrypt
+            value = bcrypt.hashpw(value.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            setattr(user, "password_hash", value)
+        elif hasattr(user, key):
+            setattr(user, key, value)
+    db.commit()
+    db.refresh(user)
+    return user
+
+# Soft delete user (mark as inactive)
+def soft_delete_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id, User.is_active == 1).first()
+    if not user:
+        return None
+    user.is_active = 0
+    db.commit()
+    return user
+
+# Hard delete user (remove from DB)
+def hard_delete_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return None
+    db.delete(user)
+    db.commit()
+    return True
+
+# Reactivate a soft-deleted user
+def reactivate_user(db: Session, user_id: int):
+    user = db.query(User).filter(User.id == user_id, User.is_active == 0).first()
+    if not user:
+        return None
+    user.is_active = 1
+    db.commit()
+    db.refresh(user)
+    return user
