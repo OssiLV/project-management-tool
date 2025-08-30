@@ -40,7 +40,7 @@ Open the `.env` file and **add your own values** (database, secrets, etc.).
 docker compose up -d
 ```
 
-## API Documentation
+## 🗎 API Documentation
 
 📖 Explore and test the API with `Swagger UI`:
 
