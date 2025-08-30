@@ -22,6 +22,7 @@ services:
             JWT_SECRET: ${JWT_SECRET}
         volumes:
             - ./auth_service/migrations:/app/migrations
+            - ./auth_service/app:/app/app
 
     project_service:
         build: ./project_service
@@ -37,6 +38,7 @@ services:
             JWT_SECRET: ${JWT_SECRET}
         volumes:
             - ./project_service/migrations:/app/migrations
+            - ./project_service/app:/app/app
 
     # board_service:
     #   build: ./board_service
