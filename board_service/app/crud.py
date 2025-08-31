@@ -20,7 +20,7 @@ def create_list(db: Session, list_: ListCreate):
     return db_list
 
 def create_task(db: Session, task: TaskCreate):
-    db_task = Task(**task.dict())
+    db_task = Task(**task.model_dump())
     db.add(db_task)
     db.commit()
     db.refresh(db_task)

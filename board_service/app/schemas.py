@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional, List
 
@@ -12,8 +12,7 @@ class BoardResponse(BaseModel):
     name: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ListCreate(BaseModel):
     board_id: int
@@ -26,8 +25,7 @@ class ListResponse(BaseModel):
     name: str
     position: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TaskCreate(BaseModel):
     list_id: int
@@ -48,8 +46,7 @@ class TaskResponse(BaseModel):
     due_date: Optional[datetime]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TaskLabelCreate(BaseModel):
     label: str
@@ -59,8 +56,7 @@ class TaskLabelResponse(BaseModel):
     task_id: int
     label: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TaskAttachmentCreate(BaseModel):
     file_url: str
@@ -71,8 +67,7 @@ class TaskAttachmentResponse(BaseModel):
     file_url: str
     uploaded_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class TaskMove(BaseModel):
     new_list_id: int
