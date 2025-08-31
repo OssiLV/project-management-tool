@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 import bcrypt
 from .database import get_db
 from .schemas import UserCreate, UserResponse, Token, RoleCreate, RoleResponse
-from .crud import create_user, get_user_by_email, create_role, get_roles, get_user_by_id, update_user, soft_delete_user, hard_delete_user
+from .crud import create_user, get_user_by_email, create_role, get_roles, get_user_by_id, update_user, soft_delete_user, hard_delete_user, reactivate_user
 from .auth import create_access_token, get_current_user
 
 app = FastAPI(
@@ -54,8 +54,7 @@ def list_roles(db: Session = Depends(get_db)):
 
 @app.patch("/users/{user_id}", response_model=UserResponse)
 def admin_update_user(user_id: int, update_data: dict = Body(...), current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    # Allow admin or self
-    if current_user.get("role") != "admin" and current_user["id"] != user_id:
+    if not (current_user.get("role") == "admin" or current_user["id"] == user_id):
         raise HTTPException(status_code=403, detail="Not authorized")
     user = update_user(db, user_id, update_data)
     if not user:
@@ -65,21 +64,16 @@ def admin_update_user(user_id: int, update_data: dict = Body(...), current_user:
 # Soft delete user (admin or self)
 @app.delete("/users/{user_id}/soft", response_model=UserResponse)
 def admin_and_owner_soft_delete_user(user_id: int, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    # Allow admin or self
-    if current_user.get("role") != "admin" and current_user["id"] != user_id:
+    if not (current_user.get("role") == "admin" or current_user["id"] == user_id):
         raise HTTPException(status_code=403, detail="Not authorized")
     user = soft_delete_user(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found or already inactive")
     return user
 
-# Reactivate user (admin or self)
-from .crud import reactivate_user
-
 @app.post("/users/{user_id}/reactivate", response_model=UserResponse)
 def admin_and_owner_reactivate_user(user_id: int, current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
-    # Allow admin or self
-    if current_user.get("role") != "admin" and current_user["id"] != user_id:
+    if not (current_user.get("role") == "admin" or current_user["id"] == user_id):
         raise HTTPException(status_code=403, detail="Not authorized")
     user = reactivate_user(db, user_id)
     if not user:

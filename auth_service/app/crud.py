@@ -5,7 +5,7 @@ import bcrypt
 
 def create_user(db: Session, user: UserCreate):
     hashed_pw = bcrypt.hashpw(user.password.encode('utf-8'), bcrypt.gensalt())
-    db_user = User(name=user.name, email=user.email, password_hash=hashed_pw.decode('utf-8'), role=user.role)
+    db_user = User(name=user.name, email=user.email, password_hash=hashed_pw.decode('utf-8'), role=user.role, is_active=1)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -34,10 +34,9 @@ def update_user(db: Session, user_id: int, update_data: dict):
         return None
     for key, value in update_data.items():
         if key == "password":
-            import bcrypt
             value = bcrypt.hashpw(value.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             setattr(user, "password_hash", value)
-        elif hasattr(user, key):
+        elif key in {"name", "email", "role"}:
             setattr(user, key, value)
     db.commit()
     db.refresh(user)
@@ -50,6 +49,7 @@ def soft_delete_user(db: Session, user_id: int):
         return None
     user.is_active = 0
     db.commit()
+    db.refresh(user)
     return user
 
 # Hard delete user (remove from DB)
