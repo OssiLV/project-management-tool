@@ -8,6 +8,11 @@ services:
             - "3306:3306" # For debug
         volumes:
             - db_data:/var/lib/mysql
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     auth_service:
         build: ./auth_service
@@ -23,6 +28,12 @@ services:
         volumes:
             - ./auth_service/migrations:/app/migrations
             - ./auth_service/app:/app/app
+            - ./auth_service/tests:/app/tests
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     project_service:
         build: ./project_service
@@ -39,19 +50,35 @@ services:
         volumes:
             - ./project_service/migrations:/app/migrations
             - ./project_service/app:/app/app
+            - ./project_service/tests:/app/tests
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
-    # board_service:
-    #   build: ./board_service
-    #   restart: always
-    #   depends_on:
-    #     - db
-    #     - auth_service
-    #   environment:
-    #     MYSQL_HOST: ${MYSQL_HOST}
-    #     MYSQL_PORT: ${MYSQL_PORT}
-    #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    #     MYSQL_DATABASE: board_db
-    #     JWT_SECRET: ${JWT_SECRET}
+    board_service:
+        build: ./board_service
+        restart: always
+        depends_on:
+            - db
+            - auth_service
+            - project_service # To check project role
+        environment:
+            MYSQL_HOST: ${MYSQL_HOST}
+            MYSQL_PORT: ${MYSQL_PORT}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: board_db
+            JWT_SECRET: ${JWT_SECRET}
+        volumes:
+            - ./board_service/migrations:/app/migrations
+            - ./board_service/app:/app/app
+            - ./board_service/tests:/app/tests
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     api_gateway:
         image: nginx:latest
@@ -63,6 +90,7 @@ services:
         depends_on:
             - auth_service
             - project_service
+            - board_service
 
 volumes:
     db_data:

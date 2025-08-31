@@ -2,23 +2,21 @@
 .git
 .gitignore
 
+# Docker
+Dockerfile
+.dockerignore
+
 # Python
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-*.pkl
-*.egg-info/
-.eggs/
-.venv/
-venv/
 
 # Env & secrets
 .env
 *.env
 *.secret
-*.key
 *.pem
+*.key
 
 # Logs & tmp
 *.log
@@ -29,6 +27,3 @@ venv/
 .vscode/
 .idea/
 *.iml
-
-# Alembic versions migrations
-versions/
