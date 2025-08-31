@@ -9,3 +9,6 @@ bcrypt==4.2.0
 python-multipart==0.0.9
 alembic==1.13.3
 requests==2.30.0
+pytest==8.4.1
+pytest-asyncio==0.24.0
+httpx>=0.24,<1.0

@@ -46,8 +46,9 @@ def update_project(db: Session, project_id: int, update_data: dict):
     project = db.query(Project).filter(Project.id == project_id).first()
     if not project:
         return None
+    allowed = {"name", "description"}
     for key, value in update_data.items():
-        if hasattr(project, key):
+        if key in allowed:
             setattr(project, key, value)
     db.commit()
     db.refresh(project)
