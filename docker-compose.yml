@@ -30,7 +30,11 @@ services:
             - ./auth_service/app:/app/app
             - ./auth_service/tests:/app/tests
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+            test:
+                [
+                    "CMD-SHELL",
+                    'python -c ''import urllib.request; urllib.request.urlopen("http://localhost:8000/docs")'' || exit 1',
+                ]
             interval: 10s
             timeout: 5s
             retries: 5
@@ -52,7 +56,11 @@ services:
             - ./project_service/app:/app/app
             - ./project_service/tests:/app/tests
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+            test:
+                [
+                    "CMD-SHELL",
+                    'python -c ''import urllib.request; urllib.request.urlopen("http://localhost:8000/docs")'' || exit 1',
+                ]
             interval: 10s
             timeout: 5s
             retries: 5
@@ -75,7 +83,11 @@ services:
             - ./board_service/app:/app/app
             - ./board_service/tests:/app/tests
         healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+            test:
+                [
+                    "CMD-SHELL",
+                    'python -c ''import urllib.request; urllib.request.urlopen("http://localhost:8000/docs")'' || exit 1',
+                ]
             interval: 10s
             timeout: 5s
             retries: 5
