@@ -20,7 +20,7 @@ A project management system following the **Kanban/Scrum** model. Users can:
 -   **Containerization**: Docker + Docker Compose
 -   **Auth**: JWT (JSON Web Token) – stateless authentication between microservices.
 -   **Load Balancing / Reverse Proxy**: Nginx
--   **Testing**: coming soon...
+-   **Testing**: pytest
 -   **CI/CD**: coming soon...
 -   **Monitoring/Logging**: coming soon...
 
@@ -48,6 +48,7 @@ docker compose up -d
 
 -   http://localhost:8080/auth_service/docs
 -   http://localhost:8080/project_service/docs
+-   http://localhost:8080/board_service/docs
 -   coming soon...
 
 📬 You can explore and test the API with `Postman`:
