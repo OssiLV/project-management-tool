@@ -4,10 +4,20 @@ services:
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            AUTH_DATABASE: ${AUTH_DATABASE}
+            AUTH_USER: ${AUTH_USER}
+            AUTH_PASSWORD: ${AUTH_PASSWORD}
+            PROJECT_DATABASE: ${PROJECT_DATABASE}
+            PROJECT_USER: ${PROJECT_USER}
+            PROJECT_PASSWORD: ${PROJECT_PASSWORD}
+            BOARD_DATABASE: ${BOARD_DATABASE}
+            BOARD_USER: ${BOARD_USER}
+            BOARD_PASSWORD: ${BOARD_PASSWORD}
         ports:
             - "3306:3306" # For debug
         volumes:
             - db_data:/var/lib/mysql
+            - ./db:/docker-entrypoint-initdb.d
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             interval: 10s
@@ -22,8 +32,9 @@ services:
         environment:
             MYSQL_HOST: ${MYSQL_HOST}
             MYSQL_PORT: ${MYSQL_PORT}
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: auth_db
+            MYSQL_USER: ${AUTH_USER}
+            MYSQL_PASSWORD: ${AUTH_PASSWORD}
+            MYSQL_DATABASE: ${AUTH_DATABASE}
             JWT_SECRET: ${JWT_SECRET}
         volumes:
             - ./auth_service/migrations:/app/migrations
@@ -48,8 +59,9 @@ services:
         environment:
             MYSQL_HOST: ${MYSQL_HOST}
             MYSQL_PORT: ${MYSQL_PORT}
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: project_db
+            MYSQL_USER: ${PROJECT_USER}
+            MYSQL_PASSWORD: ${PROJECT_PASSWORD}
+            MYSQL_DATABASE: ${PROJECT_DATABASE}
             JWT_SECRET: ${JWT_SECRET}
         volumes:
             - ./project_service/migrations:/app/migrations
@@ -71,12 +83,13 @@ services:
         depends_on:
             - db
             - auth_service
-            - project_service # To check project role
+            - project_service
         environment:
             MYSQL_HOST: ${MYSQL_HOST}
             MYSQL_PORT: ${MYSQL_PORT}
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: board_db
+            MYSQL_USER: ${BOARD_USER}
+            MYSQL_PASSWORD: ${BOARD_PASSWORD}
+            MYSQL_DATABASE: ${BOARD_DATABASE}
             JWT_SECRET: ${JWT_SECRET}
         volumes:
             - ./board_service/migrations:/app/migrations
