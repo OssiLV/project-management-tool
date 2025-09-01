@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 from typing import Optional
 
@@ -13,12 +13,11 @@ class ProjectResponse(BaseModel):
     owner_id: int
     created_at: datetime
 
-    class Config:
-        from_attributes = True  # To map from ORM
+    model_config = ConfigDict(from_attributes=True)
 
 class ProjectMemberCreate(BaseModel):
     user_id: int
-    role: str  # e.g., 'member', 'guest'
+    role: str  # e.g., 'owner', 'member', 'guest'
 
 class ProjectMemberResponse(BaseModel):
     id: int
@@ -26,5 +25,4 @@ class ProjectMemberResponse(BaseModel):
     user_id: int
     role: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
