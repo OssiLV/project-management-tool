@@ -26,6 +26,8 @@ services:
         volumes:
             - db_data:/var/lib/mysql
             - ./infrastructure/db:/docker-entrypoint-initdb.d
+        networks:
+            - backend
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             interval: 10s
@@ -48,6 +50,8 @@ services:
             - ./services/auth/migrations:/app/migrations
             - ./services/auth/src:/app/src
             - ./services/auth/tests:/app/tests
+        networks:
+            - backend
         healthcheck:
             test:
                 [
@@ -75,6 +79,8 @@ services:
             - ./services/project/migrations:/app/migrations
             - ./services/project/src:/app/src
             - ./services/project/tests:/app/tests
+        networks:
+            - backend
         healthcheck:
             test:
                 [
@@ -103,6 +109,8 @@ services:
             - ./services/board/migrations:/app/migrations
             - ./services/board/src:/app/src
             - ./services/board/tests:/app/tests
+        networks:
+            - backend
         healthcheck:
             test:
                 [
@@ -131,6 +139,8 @@ services:
             - ./services/comment/migrations:/app/migrations
             - ./services/comment/src:/app/src
             - ./services/comment/tests:/app/tests
+        networks:
+            - backend
         healthcheck:
             test:
                 [
@@ -153,6 +163,8 @@ services:
             - project_service
             - board_service
             - comment_service
+        networks:
+            - backend
 
 volumes:
     db_data:
