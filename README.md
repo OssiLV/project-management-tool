@@ -49,9 +49,10 @@ docker compose up -d
 -   http://localhost:8080/auth_service/docs
 -   http://localhost:8080/project_service/docs
 -   http://localhost:8080/board_service/docs
+-   http://localhost:8080/comment_service/docs
 -   coming soon...
 
-📬 You can explore and test the API with `Postman`:
+📬 You can explore and test the API with `Postman` (**is updating**):
 
 -   [Postman API Guide](https://documenter.getpostman.com/view/25520088/2sB3BLjTTi)
 

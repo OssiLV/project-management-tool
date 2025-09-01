@@ -3,16 +3,24 @@ services:
         image: mariadb:10.6
         restart: always
         environment:
+            # Common env
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            # Auth env
             AUTH_DATABASE: ${AUTH_DATABASE}
             AUTH_USER: ${AUTH_USER}
             AUTH_PASSWORD: ${AUTH_PASSWORD}
+            # Project env
             PROJECT_DATABASE: ${PROJECT_DATABASE}
             PROJECT_USER: ${PROJECT_USER}
             PROJECT_PASSWORD: ${PROJECT_PASSWORD}
+            # Board env
             BOARD_DATABASE: ${BOARD_DATABASE}
             BOARD_USER: ${BOARD_USER}
             BOARD_PASSWORD: ${BOARD_PASSWORD}
+            # Comment env
+            COMMENT_DATABASE: ${COMMENT_DATABASE}
+            COMMENT_USER: ${COMMENT_USER}
+            COMMENT_PASSWORD: ${COMMENT_PASSWORD}
         ports:
             - "3306:3306" # For debug
         volumes:
@@ -83,7 +91,7 @@ services:
         depends_on:
             - db
             - auth_service
-            - project_service
+            - project_service # To check role
         environment:
             MYSQL_HOST: ${MYSQL_HOST}
             MYSQL_PORT: ${MYSQL_PORT}
@@ -105,6 +113,34 @@ services:
             timeout: 5s
             retries: 5
 
+    comment_service:
+        build: ./services/comment
+        restart: always
+        depends_on:
+            - db
+            - auth_service
+            - board_service # To check task
+        environment:
+            MYSQL_HOST: ${MYSQL_HOST}
+            MYSQL_PORT: ${MYSQL_PORT}
+            MYSQL_USER: ${COMMENT_USER}
+            MYSQL_PASSWORD: ${COMMENT_PASSWORD}
+            MYSQL_DATABASE: ${COMMENT_DATABASE}
+            JWT_SECRET: ${JWT_SECRET}
+        volumes:
+            - ./services/comment/migrations:/app/migrations
+            - ./services/comment/src:/app/src
+            - ./services/comment/tests:/app/tests
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    'python -c ''import urllib.request; urllib.request.urlopen("http://localhost:8000/docs")'' || exit 1',
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
     api_gateway:
         image: nginx:latest
         restart: always
@@ -116,6 +152,14 @@ services:
             - auth_service
             - project_service
             - board_service
+            - comment_service
 
 volumes:
     db_data:
+
+networks:
+    backend:
+        driver: bridge
+    # Coming soon...
+    # frontend:
+    #     driver: bridge
