@@ -13,7 +13,7 @@ fi
 # Check if versions folder is empty
 if [ -z "$(ls -A migrations/versions)" ]; then
     echo "[DOING] - Generating initial migration..."
-    alembic revision --autogenerate -m "Initial project schema"
+    alembic revision --autogenerate -m "Initial board schema"
 fi
 
 # Apply migrations
