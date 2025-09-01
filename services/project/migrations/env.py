@@ -7,8 +7,8 @@ from alembic import context
 import os
 
 # Import Base models
-from app.database import Base
-from app import models
+from src.database import Base
+from src import models
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -23,7 +23,7 @@ target_metadata = Base.metadata
 # --- BUILD DATABASE URL FROM ENV ---
 MYSQL_USER = os.getenv("MYSQL_USER")
 MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
-MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "auth_db")
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "project_db")
 MYSQL_HOST = os.getenv("MYSQL_HOST")
 MYSQL_PORT = os.getenv("MYSQL_PORT", "3306")
 

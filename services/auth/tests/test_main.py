@@ -1,7 +1,7 @@
 import pytest
-from app.schemas import UserCreate
-from app.crud import create_user
-from app.models import User
+from src.schemas import UserCreate
+from src.crud import create_user
+from src.models import User
 
 @pytest.fixture(scope="function")
 def test_user(db_session):

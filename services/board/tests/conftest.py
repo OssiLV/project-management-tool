@@ -3,8 +3,8 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-from app.database import Base, get_db
-from app.main import app
+from src.database import Base, get_db
+from src.main import app
 
 # Test DB: In-memory SQLite
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"

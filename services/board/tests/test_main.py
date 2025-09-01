@@ -1,6 +1,6 @@
 import pytest
-from app.schemas import BoardCreate, ListCreate, TaskCreate
-from app.crud import create_board, create_list, create_task, get_board, get_lists_by_board, get_tasks_by_list, update_list, delete_list, update_task, delete_task
+from src.schemas import BoardCreate, ListCreate, TaskCreate
+from src.crud import create_board, create_list, create_task, get_board, get_lists_by_board, get_tasks_by_list, update_list, delete_list, update_task, delete_task
 
 def test_create_board(db_session):
     board_data = BoardCreate(project_id=1, name="Test Board")

@@ -17,7 +17,7 @@ services:
             - "3306:3306" # For debug
         volumes:
             - db_data:/var/lib/mysql
-            - ./db:/docker-entrypoint-initdb.d
+            - ./infrastructure/db:/docker-entrypoint-initdb.d
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             interval: 10s
@@ -25,7 +25,7 @@ services:
             retries: 5
 
     auth_service:
-        build: ./auth_service
+        build: ./services/auth
         restart: always
         depends_on:
             - db
@@ -37,9 +37,9 @@ services:
             MYSQL_DATABASE: ${AUTH_DATABASE}
             JWT_SECRET: ${JWT_SECRET}
         volumes:
-            - ./auth_service/migrations:/app/migrations
-            - ./auth_service/app:/app/app
-            - ./auth_service/tests:/app/tests
+            - ./services/auth/migrations:/app/migrations
+            - ./services/auth/src:/app/src
+            - ./services/auth/tests:/app/tests
         healthcheck:
             test:
                 [
@@ -51,7 +51,7 @@ services:
             retries: 5
 
     project_service:
-        build: ./project_service
+        build: ./services/project
         restart: always
         depends_on:
             - db
@@ -64,9 +64,9 @@ services:
             MYSQL_DATABASE: ${PROJECT_DATABASE}
             JWT_SECRET: ${JWT_SECRET}
         volumes:
-            - ./project_service/migrations:/app/migrations
-            - ./project_service/app:/app/app
-            - ./project_service/tests:/app/tests
+            - ./services/project/migrations:/app/migrations
+            - ./services/project/src:/app/src
+            - ./services/project/tests:/app/tests
         healthcheck:
             test:
                 [
@@ -78,7 +78,7 @@ services:
             retries: 5
 
     board_service:
-        build: ./board_service
+        build: ./services/board
         restart: always
         depends_on:
             - db
@@ -92,9 +92,9 @@ services:
             MYSQL_DATABASE: ${BOARD_DATABASE}
             JWT_SECRET: ${JWT_SECRET}
         volumes:
-            - ./board_service/migrations:/app/migrations
-            - ./board_service/app:/app/app
-            - ./board_service/tests:/app/tests
+            - ./services/board/migrations:/app/migrations
+            - ./services/board/src:/app/src
+            - ./services/board/tests:/app/tests
         healthcheck:
             test:
                 [
@@ -111,7 +111,7 @@ services:
         ports:
             - "${API_GATEWAY_PORT}:80" # Expose port to host (default user access via localhost:8080)
         volumes:
-            - ./nginx.conf:/etc/nginx/nginx.conf:ro # Mount file config NGINX
+            - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro # Mount file config NGINX
         depends_on:
             - auth_service
             - project_service

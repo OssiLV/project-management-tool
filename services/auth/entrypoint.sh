@@ -22,4 +22,4 @@ alembic upgrade head || { echo "Migration failed"; exit 1; }
 
 # Start application
 echo "[DOING] - Starting application..."
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
+exec uvicorn src.main:app --host 0.0.0.0 --port 8000 --workers 4
